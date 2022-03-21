@@ -1,0 +1,35 @@
+# 打包依赖阶段使用golang作为基础镜像
+FROM golang:1.14 as builder
+
+# 构建时使用的变量，结束后失效
+ARG dir=getArea
+
+# 构建后以旧生效的变量，CGO_ENABLED禁用cgo 然后指定OS等，启用go module
+ENV GO111MODULE=on \
+    CGO_ENABLED=0 \
+    GOOS=linux \
+    GOARCH=amd64 \
+	GOPROXY="https://proxy.golang.com.cn,direct"
+
+WORKDIR /$dir
+
+COPY ./service/$dir .
+
+#并go build
+RUN go build main.go
+# 运行时使用scratch作为基础镜像
+# FROM scratch as prod
+FROM alpine
+
+ARG dir=getArea \
+    port=52668
+
+WORKDIR /$dir
+# 为了防止代码中请求https链接报错，我们需要将证书纳入到scratch中
+COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/cert
+
+COPY --from=builder /$dir .
+
+EXPOSE $port
+
+ENTRYPOINT ["./main"]

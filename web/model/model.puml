@@ -1,0 +1,72 @@
+@startuml
+namespace model {
+    class Area << (S,Aquamarine) >> {
+        + Id int
+        + Name string
+        + Houses []*House
+
+    }
+    class Facility << (S,Aquamarine) >> {
+        + Id int
+        + Name string
+        + Houses []*House
+
+    }
+    class House << (S,Aquamarine) >> {
+        + UserId uint
+        + AreaId uint
+        + Title string
+        + Address string
+        + Room_count int
+        + Acreage int
+        + Price int
+        + Unit string
+        + Capacity int
+        + Beds string
+        + Deposit int
+        + Min_days int
+        + Max_days int
+        + Order_count int
+        + Index_image_url string
+        + Facilities []*Facility
+        + Images []*HouseImage
+        + Orders []*OrderHouse
+
+    }
+    class HouseImage << (S,Aquamarine) >> {
+        + Id int
+        + Url string
+        + HouseId uint
+
+    }
+    class OrderHouse << (S,Aquamarine) >> {
+        + UserId uint
+        + HouseId uint
+        + Begin_date time.Time
+        + End_date time.Time
+        + Days int
+        + House_price int
+        + Amount int
+        + Status string
+        + Comment string
+        + Credit bool
+
+    }
+    class User << (S,Aquamarine) >> {
+        + ID int
+        + Name string
+        + Password_hash string
+        + Mobile string
+        + Real_name string
+        + Id_card string
+        + Avatar_url string
+        + Houses []*House
+        + Orders []*OrderHouse
+
+    }
+}
+"gorm.Model" *-- "model.House"
+"gorm.Model" *-- "model.OrderHouse"
+
+
+@enduml

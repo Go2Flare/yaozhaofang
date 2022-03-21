@@ -1,0 +1,4 @@
+include:
+  - project: 'Go2Flare/cicd_repo'
+    ref: main
+    file: 'templates/yzf-pipeline.yml'
